@@ -9,7 +9,7 @@ repository = "https://github.com/BurntSushi/rust-memchr"
 readme = "README.md"
 keywords = ["memchr", "char", "scan", "strchr", "string"]
 license = "Unlicense/MIT"
-exclude = ["/ci/*", "/.travis.yml", "/Makefile", "/appveyor.yml"]
+exclude = ["/ci/*", "/.travis.yml", "/Makefile", "/appveyor.yml", "/sgx/*"]
 
 [badges]
 travis-ci = { repository = "BurntSushi/rust-memchr" }
@@ -20,11 +20,14 @@ name = "memchr"
 bench = false
 
 [features]
-default = ["use_std"]
+default = ["use_std", "mesalock_sgx"]
 use_std = []
+mesalock_sgx = ["sgx_tstd", "sgx_libc", "sgx_types"]
 
-[dependencies]
-libc = { version = "0.2.18", default-features = false, optional = true }
+[target.'cfg(not(target_env = "sgx"))'.dependencies]
+sgx_libc = { rev = "v1.0.9", git = "https://github.com/baidu/rust-sgx-sdk.git", optional = true}
+sgx_tstd = { rev = "v1.0.9", git = "https://github.com/baidu/rust-sgx-sdk.git", optional = true}
+sgx_types = { rev = "v1.0.9", git = "https://github.com/baidu/rust-sgx-sdk.git", optional = true}
 
 [dev-dependencies]
 quickcheck = { version = "0.8", default-features = false }
